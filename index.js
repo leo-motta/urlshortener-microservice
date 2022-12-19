@@ -111,14 +111,14 @@ app.route('/api/shorturl').post(async (req, res) => {
     //Provided URL
     const original_url = req.body.url
     
-    //Transform 'https://www.google.com/' url to 'www.google.com'
-    const result_url = (req.body.url).replace(/^https?:\/\//, '').replace(/\/+$/, '')
+    //Transform 'https://www.google.com/query?=' url to 'www.google.com'
+    const result_url = (req.body.url).replace(/^https?:\/\//, '').replace(/[^/]*$/, '').replace(/\/+$/, '')
     
     //Check if the provided URL is a valid URL
     const valid_url = await isValidUrl(original_url)
     if(!valid_url)
       throw new Error('invalid url')
-    
+
     //Check if database doc contains provided URL
     const db_doc = await findByURLPromise(original_url)
     if (db_doc) {
